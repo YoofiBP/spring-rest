@@ -1,93 +1,43 @@
 package com.example.springrest;
 
+import com.example.springrest.domain.Car;
+import com.example.springrest.domain.CarRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.data.repository.CrudRepository;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
 import java.util.List;
-import java.util.UUID;
+
 
 @SpringBootApplication
-public class SpringRestApplication {
+public class SpringRestApplication implements CommandLineRunner {
+
+    private static final Logger logger = LoggerFactory.getLogger(CarRepository.class);
+
+    @Autowired
+    private CarRepository carRepository;
 
     public static void main(String[] args) {
         SpringApplication.run(SpringRestApplication.class, args);
     }
 
-}
+    @Override
+    public void run(String... args) throws Exception {
+        carRepository.saveAll(
+                List.of(
+                        new Car("Ford", "Mustang", "Red",
+                                "ADF-1121", 2021, 59000),
+                        new Car("Nissan", "Leaf",
+                                "White",
+                                "SSJ-3002", 2019, 29000),
+                        new Car("Toyota", "Prius",
+                                "Silver",
+                                "KO-0212", 2020, 39000)
+                ));
 
-@Entity
-class MyUser {
-
-    @Id
-    private UUID id;
-    private int age;
-    private String firstName;
-    private String lastName;
-    private String email;
-
-    public MyUser(int age, String firstName, String lastName, String email) {
-        this.id = UUID.randomUUID();
-        this.age = age;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.email = email;
-    }
-
-    public MyUser() {
-
-    }
-
-    public void setId(UUID id) {
-        this.id = id;
-    }
-
-    public UUID getId() {
-        return id;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public int getAge() {
-        return age;
-    }
-
-    public String getEmail() {
-        return email;
+        logger.info(carRepository.findByBrand("Toyota" ).toString());
     }
 }
-
-@RestController
-@RequestMapping("/users")
-class UserController {
-
-    private final UserRepository userRepository;
-
-    public UserController(UserRepository userRepository) {
-        this.userRepository = userRepository;
-        this.userRepository.saveAll(List.of(new MyUser(26, "Yoofi", "Brown-Pobee", "joseph@email.com"),
-                new MyUser(22, "Naa", "Harding", "naa@email.com")
-        ));
-    }
-
-    @GetMapping
-    Iterable<MyUser> getUsers() {
-        return this.userRepository.findAll();
-    }
-}
-
-interface UserRepository extends CrudRepository<MyUser, UUID> {
-
-}
-
