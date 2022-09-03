@@ -1,6 +1,7 @@
 package com.example.springrest.domain;
 
 import javax.persistence.*;
+import java.util.Set;
 
 @Entity
 public class Car {
@@ -13,17 +14,20 @@ public class Car {
     private int yearMade, price;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "owner" )
     private Owner owner;
 
+    @ManyToMany(mappedBy = "cars" )
+    private Set<Owner> owners;
 
-    public Car(String brand, String model, String color, String registerNumber, int yearMade, int price) {
+
+    public Car(String brand, String model, String color, String registerNumber, int yearMade, int price, Owner owner) {
         this.brand = brand;
         this.model = model;
         this.color = color;
         this.registerNumber = registerNumber;
         this.yearMade = yearMade;
         this.price = price;
+        this.owner = owner;
     }
 
     public Car() {
