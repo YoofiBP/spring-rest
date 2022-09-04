@@ -1,5 +1,7 @@
 package com.example.springrest.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.util.Set;
 
@@ -13,11 +15,8 @@ public class Car {
     private String brand, color, model, registerNumber;
     private int yearMade, price;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     private Owner owner;
-
-    @ManyToMany(mappedBy = "cars" )
-    private Set<Owner> owners;
 
 
     public Car(String brand, String model, String color, String registerNumber, int yearMade, int price, Owner owner) {

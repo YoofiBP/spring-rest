@@ -1,9 +1,11 @@
 package com.example.springrest.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import javax.persistence.*;
-import java.util.HashSet;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 @Entity
 public class Owner {
@@ -13,9 +15,9 @@ public class Owner {
     private long ownerid;
     private String firstName, lastName;
 
-    @ManyToMany(cascade = CascadeType.PERSIST)
-    @JoinTable(name = "car_owner", joinColumns = {@JoinColumn(name = "ownerid" )}, inverseJoinColumns = {@JoinColumn(name = "id" )})
-    private Set<Car> cars = new HashSet<>();
+    @OneToMany(cascade = CascadeType.PERSIST)
+//    @JsonIgnore
+    private List<Car> cars = new ArrayList<>();
 
     public Owner() {
     }
@@ -29,7 +31,7 @@ public class Owner {
         return cars;
     }
 
-    public void setCars(Set<Car> cars) {
+    public void setCars(List<Car> cars) {
         this.cars = cars;
     }
 
